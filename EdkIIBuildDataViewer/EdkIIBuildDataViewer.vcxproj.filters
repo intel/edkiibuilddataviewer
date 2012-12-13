@@ -1,0 +1,190 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ColumnTree">
+      <UniqueIdentifier>{b0f730fd-a1ec-4fa1-8471-25914add3056}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ColumnTree\Header Files">
+      <UniqueIdentifier>{9956129f-7eaf-4cb7-8b9e-e94616ad5e9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ColumnTree\Source Files">
+      <UniqueIdentifier>{c1595e2a-5fa7-44b6-ab53-07ae5c9ee786}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X-controls">
+      <UniqueIdentifier>{318c5457-4661-4631-a93f-f79a3b8bd26a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X-controls\Header Files">
+      <UniqueIdentifier>{57691931-1ce9-454a-b82e-0c8b94b786bc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="X-controls\Source Files">
+      <UniqueIdentifier>{42825273-0078-4e38-81b3-4a7a4b7a87a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EasySize">
+      <UniqueIdentifier>{93acf702-cfc2-4163-a3df-cf91775b99e7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="EasySize\Header Files">
+      <UniqueIdentifier>{c822f1fd-e8b3-4c92-96a9-cfed0715d82b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ReadMe.txt" />
+    <None Include="EdkIIBuildDataViewer.htm" />
+    <None Include="res\EdkIIBuildDataViewer.rc2">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\EdkIIBuildDataViewer.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="ChooseEditor.htm" />
+    <None Include="res\Intel.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="EdkIIBuildDataViewer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EdkIIBuildDataViewerDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ChooseEditor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GetVersionInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ColumnTree\ColumnTreeCtrl.h">
+      <Filter>ColumnTree\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ColumnTree\ColumnTreeView.h">
+      <Filter>ColumnTree\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ColumnTree\ColumnTreeWnd.h">
+      <Filter>ColumnTree\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="X-controls\FontSize.h">
+      <Filter>X-controls\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="X-controls\XColorStatic.h">
+      <Filter>X-controls\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="X-controls\XGroupBox.h">
+      <Filter>X-controls\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="X-controls\XProgressWnd.h">
+      <Filter>X-controls\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="X-controls\XVisualStyles.h">
+      <Filter>X-controls\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EasySize\EasySize.h">
+      <Filter>EasySize\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CustomListCtrl.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="X-controls\XIcon.h">
+      <Filter>X-controls\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AboutDlg.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="EdkIIBuildDataViewer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EdkIIBuildDataViewerDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ChooseEditor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GetVersionInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ColumnTree\ColumnTreeCtrl.cpp">
+      <Filter>ColumnTree\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ColumnTree\ColumnTreeView.cpp">
+      <Filter>ColumnTree\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ColumnTree\ColumnTreeWnd.cpp">
+      <Filter>ColumnTree\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="X-controls\FontSize.cpp">
+      <Filter>X-controls\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="X-controls\XColorStatic.cpp">
+      <Filter>X-controls\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="X-controls\XGroupBox.cpp">
+      <Filter>X-controls\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="X-controls\XProgressWnd.cpp">
+      <Filter>X-controls\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomListCtrl.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="X-controls\XIcon.cpp">
+      <Filter>X-controls\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="AboutDlg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadBuildLog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadBuildYLog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Search.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Registry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GuidFuncs.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MsgsClick.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MsgsDblClick.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MsgsOther.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="EdkIIBuildDataViewer.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
