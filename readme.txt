@@ -1,5 +1,6 @@
 EDK II Build Data Viewer
 
+Open source code located at https://github.com/01org/edkiibuilddataviewer/
 
 ***************************************
 * Summary
@@ -38,5 +39,16 @@ line number where the data construct was found, and all data is searchable.
 ***************************************
 * Release Notes
 ***************************************
+o Revision 1.0.1.2
+  + Add initial command line support.
+  + Add command line error checks to output to console or message box.
+  + Add AutoIt script (http://www.autoitscript.com/site/autoit) to read a build log and output the source list.
+
+o Revision 1.0.1.1
+  + Change writing source files used in build to enable after loading build log instead of build log and build report.
+
+o Revision 1.0.1.0
+  + Add support for writing source files used in build to a text file, either in normal or doxygen format.
+
 o Revision 1.0.0.15
   + Initial release.

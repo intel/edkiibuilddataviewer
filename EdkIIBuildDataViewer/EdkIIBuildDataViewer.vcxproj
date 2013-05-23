@@ -123,8 +123,10 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="X-controls\argcargv.h" />
     <ClInclude Include="X-controls\FontSize.h" />
     <ClInclude Include="X-controls\XColorStatic.h" />
+    <ClInclude Include="X-controls\XGetopt.h" />
     <ClInclude Include="X-controls\XGroupBox.h" />
     <ClInclude Include="X-controls\XIcon.h" />
     <ClInclude Include="X-controls\XProgressWnd.h" />
@@ -139,21 +141,23 @@
     <ClCompile Include="CustomListCtrl.cpp" />
     <ClCompile Include="EdkIIBuildDataViewer.cpp" />
     <ClCompile Include="EdkIIBuildDataViewerDlg.cpp" />
+    <ClCompile Include="LoadBuildReport.cpp" />
     <ClCompile Include="MsgsClick.cpp" />
     <ClCompile Include="MsgsDblClick.cpp" />
     <ClCompile Include="MsgsOther.cpp" />
     <ClCompile Include="GetVersionInfo.cpp" />
     <ClCompile Include="GuidFuncs.cpp" />
     <ClCompile Include="LoadBuildLog.cpp" />
-    <ClCompile Include="LoadBuildYLog.cpp" />
     <ClCompile Include="Registry.cpp" />
     <ClCompile Include="Search.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="X-controls\argcargv.cpp" />
     <ClCompile Include="X-controls\FontSize.cpp" />
     <ClCompile Include="X-controls\XColorStatic.cpp" />
+    <ClCompile Include="X-controls\XGetopt.cpp" />
     <ClCompile Include="X-controls\XGroupBox.cpp" />
     <ClCompile Include="X-controls\XIcon.cpp" />
     <ClCompile Include="X-controls\XProgressWnd.cpp" />

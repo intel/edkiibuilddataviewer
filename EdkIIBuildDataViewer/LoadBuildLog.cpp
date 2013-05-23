@@ -1,5 +1,5 @@
 /*++
-  Copyright (c) 2012, Intel Corporation. All rights reserved.
+  Copyright (c) 2012-2013, Intel Corporation. All rights reserved.
   This program and the accompanying materials                          
   are licensed and made available under the terms and conditions of the BSD License         
   which accompanies this distribution.  The full text of the license may be found at        
@@ -28,7 +28,7 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 {
 	CFileDialog		fd(TRUE, L"*.log", NULL, OFN_DONTADDTORECENT | OFN_ENABLESIZING, _T("Log files (*.log)|*.log|All files (*.*)|*.*||"));
 
-	fd.m_ofn.lpstrTitle = _T("Select EDKII BIOS build log file");
+	fd.m_ofn.lpstrTitle = _T("Select EDK II BIOS build log file");
 	if (fd.DoModal() == IDOK) {
 		CStdioFile		csf, csf2;
 		BOOL			bBuildCfgFound = FALSE;
@@ -627,7 +627,8 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 
 		GetDlgItem(IDC_SEARCH_BUTTON)->EnableWindow();
 		GetDlgItem(IDC_EDIT_SEARCH)->EnableWindow();
-		GetDlgItem(IDC_SELECT_Y_LOG)->EnableWindow();
+		GetDlgItem(IDC_SELECT_BUILD_REPORT)->EnableWindow();
+		GetDlgItem(IDC_WRITE_SOURCE_LIST)->EnableWindow();
 
 		// ensure all backslashes are slashes
 		m_workspace.Replace(_T('\\'), _T('/'));

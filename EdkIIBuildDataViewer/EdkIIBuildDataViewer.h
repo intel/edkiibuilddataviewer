@@ -24,6 +24,15 @@
 // See EDKIIBuildDataViewer.cpp for the implementation of this class
 //
 
+// see EdkIIBuildDataViewer.cpp ProcessCommandLine() for command line switches and usage
+typedef struct _COMMAND_LINE_DATA {
+	BOOL		bCommandLineActive;
+	CString		buildLog;			// input
+	CString		sourceFileList;		// output
+	BOOL		bSourceUseDoxygenFormat;
+	BOOL		bSourceIncludeInf;
+} COMMAND_LINE_DATA;
+
 class CEDKIIBuildDataViewerApp : public CWinApp
 {
 public:
@@ -31,7 +40,13 @@ public:
 
 // Overrides
 public:
-	virtual BOOL InitInstance();
+	virtual BOOL		InitInstance();
+	virtual int			ExitInstance();
+
+	COMMAND_LINE_DATA	m_commandLineData;
+	int					m_exitCode;
+
+	BOOL				ProcessCommandLine(int argc, TCHAR *argv[]);
 
 // Implementation
 

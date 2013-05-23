@@ -1,5 +1,5 @@
 /*++
-  Copyright (c) 2012, Intel Corporation. All rights reserved.
+  Copyright (c) 2012-2013, Intel Corporation. All rights reserved.
   This program and the accompanying materials                          
   are licensed and made available under the terms and conditions of the BSD License         
   which accompanies this distribution.  The full text of the license may be found at        
@@ -63,7 +63,7 @@ void CEDKIIBuildDataViewerDlg::InitBuildData(BOOL bInitWinCtrl /*= TRUE*/) {
 
 	// set default strings
 	m_buildLog			= _T("");
-	m_buildYLog			= _T("");
+	m_buildReport			= _T("");
 	m_workspace			= _T("<select EDK II build log file>");
 	m_target			= _T("<select EDK II build log file>");
 	m_targetArch		= _T("<select EDK II build log file>");
@@ -77,7 +77,7 @@ void CEDKIIBuildDataViewerDlg::InitBuildData(BOOL bInitWinCtrl /*= TRUE*/) {
 	// if Windows controls are to be initialized ...
 	if (bInitWinCtrl) {
 		// clear control strings
-		GetDlgItem(IDC_SELECT_Y_LOG)->EnableWindow(FALSE);
+		GetDlgItem(IDC_SELECT_BUILD_REPORT)->EnableWindow(FALSE);
 		GetDlgItem(IDC_EDIT_BUILD_LOG)->SetWindowTextW(_T(""));
 		UpdateData(FALSE);
 
@@ -115,19 +115,19 @@ void CEDKIIBuildDataViewerDlg::InitBuildData(BOOL bInitWinCtrl /*= TRUE*/) {
 
   Parameters: none
 
-  Purpose: initialize build report -y log checkboxes, and clear data structures
+  Purpose: initialize build report log checkboxes, and clear data structures
 
   Returns: none
 --*/
 void CEDKIIBuildDataViewerDlg::InitBuildReportData() {
 	// clear all checks because it is not known what sections are present in the report
-	m_ylogPcd.SetCheck(BST_UNCHECKED);
-	m_ylogLibrary.SetCheck(BST_UNCHECKED);
-	m_ylogFlash.SetCheck(BST_UNCHECKED);
-	m_ylogDepex.SetCheck(BST_UNCHECKED);
-	m_ylogBuildFlags.SetCheck(BST_UNCHECKED);
-	m_ylogFixedAddress.SetCheck(BST_UNCHECKED);
-	m_ylogExecutionOrder.SetCheck(BST_UNCHECKED);
+	m_buildReportPcd.SetCheck(BST_UNCHECKED);
+	m_buildReportLibrary.SetCheck(BST_UNCHECKED);
+	m_buildReportFlash.SetCheck(BST_UNCHECKED);
+	m_buildReportDepex.SetCheck(BST_UNCHECKED);
+	m_buildReportBuildFlags.SetCheck(BST_UNCHECKED);
+	m_buildReportFixedAddress.SetCheck(BST_UNCHECKED);
+	m_buildReportExecutionOrder.SetCheck(BST_UNCHECKED);
 }
 
 /*++
@@ -159,7 +159,7 @@ void CEDKIIBuildDataViewerDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	DDX_Text(pDX, IDC_EDIT_BUILD_LOG, m_buildLog);
-	DDX_Text(pDX, IDC_EDIT_Y_LOG, m_buildYLog);
+	DDX_Text(pDX, IDC_EDIT_BUILD_REPORT, m_buildReport);
 	DDX_Text(pDX, IDC_STATIC_BUILD_OUTPUT_DIR, m_buildOutputDir);
 	DDX_Text(pDX, IDC_STATIC_WORKSPACE, m_workspace);
 	DDX_Text(pDX, IDC_STATIC_TARGET, m_target);
@@ -177,13 +177,13 @@ void CEDKIIBuildDataViewerDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST_INF, m_cvListInf);
 	DDX_Control(pDX, IDC_LIST_SOURCE, m_cvListSource);
 	DDX_Control(pDX, IDC_LIST_FDF, m_cvListFdf);
-	DDX_Control(pDX, IDC_CHECK_Y_LOG_BUILD_FLAGS, m_ylogBuildFlags);
-	DDX_Control(pDX, IDC_CHECK_Y_LOG_DEPEX, m_ylogDepex);
-	DDX_Control(pDX, IDC_CHECK_Y_LOG_EXECUTION_ORDER, m_ylogExecutionOrder);
-	DDX_Control(pDX, IDC_CHECK_Y_LOG_FIXED_ADDRESS, m_ylogFixedAddress);
-	DDX_Control(pDX, IDC_CHECK_Y_LOG_FLASH, m_ylogFlash);
-	DDX_Control(pDX, IDC_CHECK_Y_LOG_LIBRARY, m_ylogLibrary);
-	DDX_Control(pDX, IDC_CHECK_Y_LOG_PCD, m_ylogPcd);
+	DDX_Control(pDX, IDC_CHECK_BUILD_REPORT_BUILD_FLAGS, m_buildReportBuildFlags);
+	DDX_Control(pDX, IDC_CHECK_BUILD_REPORT_DEPEX, m_buildReportDepex);
+	DDX_Control(pDX, IDC_CHECK_BUILD_REPORT_EXECUTION_ORDER, m_buildReportExecutionOrder);
+	DDX_Control(pDX, IDC_CHECK_BUILD_REPORT_FIXED_ADDRESS, m_buildReportFixedAddress);
+	DDX_Control(pDX, IDC_CHECK_BUILD_REPORT_FLASH, m_buildReportFlash);
+	DDX_Control(pDX, IDC_CHECK_BUILD_REPORT_LIBRARY, m_buildReportLibrary);
+	DDX_Control(pDX, IDC_CHECK_BUILD_REPORT_PCD, m_buildReportPcd);
 	DDX_Text(pDX, IDC_EDIT_SEARCH, m_search);
 	DDX_Check(pDX, IDC_CHECK_SEARCH_MATCH, m_searchExactMatch);
 	DDX_Check(pDX, IDC_CHECK_SEARCH_CASE_SENSITIVE, m_searchCaseSensitive);
@@ -205,11 +205,11 @@ void CEDKIIBuildDataViewerDlg::DoDataExchange(CDataExchange* pDX)
 }
 
 
-
 BEGIN_MESSAGE_MAP(CEDKIIBuildDataViewerDlg, CDialog)
 	ON_WM_SYSCOMMAND()
 	ON_BN_CLICKED(IDC_SELECT_BUILD_LOG, &CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog)
-	ON_BN_CLICKED(IDC_SELECT_Y_LOG, &CEDKIIBuildDataViewerDlg::OnBnClickedSelectYLog)
+	ON_BN_CLICKED(IDC_SELECT_BUILD_REPORT, &CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildReport)
+	ON_BN_CLICKED(IDC_WRITE_SOURCE_LIST, &CEDKIIBuildDataViewerDlg::OnBnClickedWriteSourceList)
 	ON_BN_CLICKED(IDC_RADIO_GUID_MODULE, &CEDKIIBuildDataViewerDlg::OnBnClickedRadioFileData)
 	ON_BN_CLICKED(IDC_RADIO_GUID_VAR, &CEDKIIBuildDataViewerDlg::OnBnClickedRadioFileData)
 	ON_BN_CLICKED(IDC_RADIO_PCD_USE, &CEDKIIBuildDataViewerDlg::OnBnClickedRadioFileData)
@@ -219,13 +219,13 @@ BEGIN_MESSAGE_MAP(CEDKIIBuildDataViewerDlg, CDialog)
 	ON_BN_CLICKED(IDC_RADIO_DEC, &CEDKIIBuildDataViewerDlg::OnBnClickedRadioFileData)
 	ON_BN_CLICKED(IDC_RADIO_SOURCE, &CEDKIIBuildDataViewerDlg::OnBnClickedRadioFileData)
 	ON_BN_CLICKED(IDC_RADIO_FDFLAYOUT, &CEDKIIBuildDataViewerDlg::OnBnClickedRadioFileData)
-	ON_BN_CLICKED(IDC_CHECK_Y_LOG_PCD, &CEDKIIBuildDataViewerDlg::OnBnClickedCheckYLog)
-	ON_BN_CLICKED(IDC_CHECK_Y_LOG_LIBRARY, &CEDKIIBuildDataViewerDlg::OnBnClickedCheckYLog)
-	ON_BN_CLICKED(IDC_CHECK_Y_LOG_FLASH, &CEDKIIBuildDataViewerDlg::OnBnClickedCheckYLog)
-	ON_BN_CLICKED(IDC_CHECK_Y_LOG_DEPEX, &CEDKIIBuildDataViewerDlg::OnBnClickedCheckYLog)
-	ON_BN_CLICKED(IDC_CHECK_Y_LOG_BUILD_FLAGS, &CEDKIIBuildDataViewerDlg::OnBnClickedCheckYLog)
-	ON_BN_CLICKED(IDC_CHECK_Y_LOG_FIXED_ADDRESS, &CEDKIIBuildDataViewerDlg::OnBnClickedCheckYLog)
-	ON_BN_CLICKED(IDC_CHECK_Y_LOG_EXECUTION_ORDER, &CEDKIIBuildDataViewerDlg::OnBnClickedCheckYLog)
+	ON_BN_CLICKED(IDC_CHECK_BUILD_REPORT_PCD, &CEDKIIBuildDataViewerDlg::OnBnClickedCheckBuildReport)
+	ON_BN_CLICKED(IDC_CHECK_BUILD_REPORT_LIBRARY, &CEDKIIBuildDataViewerDlg::OnBnClickedCheckBuildReport)
+	ON_BN_CLICKED(IDC_CHECK_BUILD_REPORT_FLASH, &CEDKIIBuildDataViewerDlg::OnBnClickedCheckBuildReport)
+	ON_BN_CLICKED(IDC_CHECK_BUILD_REPORT_DEPEX, &CEDKIIBuildDataViewerDlg::OnBnClickedCheckBuildReport)
+	ON_BN_CLICKED(IDC_CHECK_BUILD_REPORT_BUILD_FLAGS, &CEDKIIBuildDataViewerDlg::OnBnClickedCheckBuildReport)
+	ON_BN_CLICKED(IDC_CHECK_BUILD_REPORT_FIXED_ADDRESS, &CEDKIIBuildDataViewerDlg::OnBnClickedCheckBuildReport)
+	ON_BN_CLICKED(IDC_CHECK_BUILD_REPORT_EXECUTION_ORDER, &CEDKIIBuildDataViewerDlg::OnBnClickedCheckBuildReport)
 	ON_BN_CLICKED(IDC_CHANGE_EDITOR, &CEDKIIBuildDataViewerDlg::OnBnClickedChangeEditor)
 	ON_BN_CLICKED(IDC_SEARCH_BUTTON, &CEDKIIBuildDataViewerDlg::OnClickedSearchButton)
 	ON_NOTIFY(NM_DBLCLK, IDC_LIST_INF, &CEDKIIBuildDataViewerDlg::OnNMDblclkLaunchEditor)
@@ -664,3 +664,67 @@ void CEDKIIBuildDataViewerDlg::OnHotKey(UINT nHotKeyId, UINT nKey1, UINT nKey2)
 	CDialog::OnHotKey(nHotKeyId, nKey1, nKey2);
 }
 #endif
+
+
+/*++
+  Function: OnBnClickedWriteSourceList
+
+  Parameters: none
+
+  Purpose: Write source list as determined by the [Sources] section of INF files used in build.
+
+  Returns: none
+--*/
+void CEDKIIBuildDataViewerDlg::OnBnClickedWriteSourceList()
+{
+//
+// Do not use OFN_OVERWRITEPROMPT flag, otherwise automation has to account for prompt/no prompt of overwrite dialog.
+//
+//	CFileDialog		fd(FALSE, L"*.log", NULL, OFN_OVERWRITEPROMPT | OFN_DONTADDTORECENT | OFN_ENABLESIZING, _T("Text file (*.txt)|*.txt||"));
+	CFileDialog		fd(FALSE, L"*.log", NULL, OFN_DONTADDTORECENT | OFN_ENABLESIZING, _T("Text file (*.txt)|*.txt||"));
+
+	fd.m_ofn.lpstrTitle = _T("Input source list filename");
+	if (fd.DoModal() == IDOK) {
+		CStdioFile		csf;
+		CString			tempStr, pathStr, fileStr, fileDelimiter;
+		int				i, index;
+		BOOL			bIncludeINF;
+
+// *** error check and return
+		if (!csf.Open(fd.GetPathName(), CFile::modeWrite | CFile::typeText | CFile::modeCreate)) {
+			MessageBox(_T("Cannot open file!"), _T("ERROR"), MB_ICONERROR);
+			return;
+		}
+
+		if (MessageBox(_T("Include driver INF files in list?"), _T("Include INF in list"), MB_YESNO) == IDYES)
+			bIncludeINF = TRUE;
+		else
+			bIncludeINF = FALSE;
+
+		if (MessageBox(_T("Use doxygen list format?"), _T("Select list format"), MB_YESNO) == IDYES) {
+			csf.WriteString(_T("INPUT = "));
+			fileDelimiter = _T(" ");
+		} else {
+			fileDelimiter = _T("\n");
+		}
+
+		for (i = 0; i < m_cvListSource.GetItemCount(); i++) {
+			// Get source file item
+			fileStr = m_cvListSource.GetItemText(i, 0);
+			// Trim leading whitespace; should be present only for non-.inf items.
+			fileStr.TrimLeft();
+			// If filename ends in .inf, then it has path, so save path because non-.inf items are filename only.
+			// The full path to each item must be created.
+			if (fileStr.Right(4) == _T(".inf")) {
+				index = fileStr.ReverseFind(_T('/'));
+				pathStr = fileStr.Left(index + 1);
+				fileStr.Delete(0, index + 1);
+				if (!bIncludeINF) continue;
+			}
+			tempStr = m_workspace + _T("/") + pathStr + fileStr + fileDelimiter;
+			csf.WriteString(tempStr);
+		}
+
+		csf.Close();
+	}
+}

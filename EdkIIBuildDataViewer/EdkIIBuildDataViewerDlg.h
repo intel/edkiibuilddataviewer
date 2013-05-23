@@ -1,5 +1,5 @@
 /*++
-  Copyright (c) 2012, Intel Corporation. All rights reserved.
+  Copyright (c) 2012-2013, Intel Corporation. All rights reserved.
   This program and the accompanying materials                          
   are licensed and made available under the terms and conditions of the BSD License         
   which accompanies this distribution.  The full text of the license may be found at        
@@ -25,6 +25,8 @@
 #include "XGroupBox.h"
 #include "XIcon.h"
 #include "EasySize.h"
+#include "XGetopt.h"
+#include "argcargv.h"
 // end: 3rd party code
 
 #define	MYMSGID_TREEDEC_DBLCLK_LAUNCH_EDITOR		(WM_APP + 0)
@@ -242,7 +244,7 @@ protected:
 	int					m_radioView;
 	int					m_radioSearch;
 	CString				m_buildLog;
-	CString				m_buildYLog;
+	CString				m_buildReport;
 	CString				m_workspace;
 	CString				m_target;
 	CString				m_targetArch;
@@ -281,13 +283,13 @@ protected:
 	CXGroupBox			m_XGroupBoxEditor;
 	CXGroupBox			m_XGroupBoxViewTypes;
 
-	CButton				m_ylogBuildFlags;
-	CButton				m_ylogDepex;
-	CButton				m_ylogExecutionOrder;
-	CButton				m_ylogFixedAddress;
-	CButton				m_ylogFlash;
-	CButton				m_ylogLibrary;
-	CButton				m_ylogPcd;
+	CButton				m_buildReportBuildFlags;
+	CButton				m_buildReportDepex;
+	CButton				m_buildReportExecutionOrder;
+	CButton				m_buildReportFixedAddress;
+	CButton				m_buildReportFlash;
+	CButton				m_buildReportLibrary;
+	CButton				m_buildReportPcd;
 
 	CButton				m_searchInf;
 	CButton				m_searchLibrary;
@@ -308,9 +310,10 @@ public:
 	afx_msg void OnSizing(UINT fwSide, LPRECT pRect);
 
 	afx_msg void OnBnClickedSelectBuildLog();
-	afx_msg void OnBnClickedSelectYLog();
+	afx_msg void OnBnClickedSelectBuildReport();
+	afx_msg void OnBnClickedWriteSourceList();
 	afx_msg void OnBnClickedRadioFileData();
-	afx_msg void OnBnClickedCheckYLog();
+	afx_msg void OnBnClickedCheckBuildReport();
 	afx_msg void OnBnClickedChangeEditor();
 	afx_msg void OnClickedSearchButton();
 

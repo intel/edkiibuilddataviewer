@@ -110,6 +110,12 @@
     <ClInclude Include="AboutDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="X-controls\argcargv.h">
+      <Filter>X-controls\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="X-controls\XGetopt.h">
+      <Filter>X-controls\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EdkIIBuildDataViewer.cpp">
@@ -160,9 +166,6 @@
     <ClCompile Include="LoadBuildLog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LoadBuildYLog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Search.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -180,6 +183,15 @@
     </ClCompile>
     <ClCompile Include="MsgsOther.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LoadBuildReport.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="X-controls\XGetopt.cpp">
+      <Filter>X-controls\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="X-controls\argcargv.cpp">
+      <Filter>X-controls\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

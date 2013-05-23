@@ -68,8 +68,8 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedRadioFileData()
 	case e_RadioViewGuidModule://list
 		m_staticLeftList.SetWindowTextW(_T("GUID module list"));
 		m_staticRightList.SetWindowTextW(_T("Selected GUID module referenced in (* = GUID definition file)"));
-		if (!m_ylogLibrary.GetCheck() && !m_ylogPcd.GetCheck() && !m_ylogDepex.GetCheck() && !m_ylogBuildFlags.GetCheck() && !m_ylogFixedAddress.GetCheck()) {
-			MessageBox(_T("Run build with \"-Y LIBRARY -Y -PCD -Y DEXPEX -Y BUILD_FLAGS -Y FIXED_ADDRESS -y filename.txt\" to generate full Module Summary data, or only the flags for the desired Module Summary data."), _T("WARNING - build -Y report file not specified"), MB_ICONWARNING);
+		if (!m_buildReportLibrary.GetCheck() && !m_buildReportPcd.GetCheck() && !m_buildReportDepex.GetCheck() && !m_buildReportBuildFlags.GetCheck() && !m_buildReportFixedAddress.GetCheck()) {
+			MessageBox(_T("Run build with \"-Y LIBRARY -Y -PCD -Y DEXPEX -Y BUILD_FLAGS -Y FIXED_ADDRESS -y filename.txt\" to generate full Module Summary data, or only the flags for the desired Module Summary data."), _T("WARNING - build report file not specified"), MB_ICONWARNING);
 			GetDlgItem(IDC_EDIT_LEFT_LIST)->SetWindowTextW(_T(""));
 		} else
 			GetDlgItem(IDC_EDIT_LEFT_LIST)->SetWindowTextW(m_fileGuidModule);
@@ -87,7 +87,7 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedRadioFileData()
 	case e_RadioViewPcdUsedInBuild://list
 		m_staticLeftList.SetWindowTextW(_T("PCD usage list"));
 		m_staticRightList.SetWindowTextW(_T("Double-click a row to edit the file at the PCD definition; left-click to copy to clipboard"));
-		if (!m_ylogPcd.GetCheck()) {
+		if (!m_buildReportPcd.GetCheck()) {
 			MessageBox(_T("Run build with \"-Y PCD -y filename.txt\" to generate PCD variable list."), _T("WARNING - missing build log file"), MB_ICONWARNING);
 			GetDlgItem(IDC_EDIT_LEFT_LIST)->SetWindowTextW(_T(""));
 		} else
@@ -96,8 +96,8 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedRadioFileData()
 	case e_RadioViewModuleUsedInBuild://tree
 		m_staticLeftList.SetWindowTextW(_T("Module usage list"));
 		m_staticRightList.SetWindowTextW(_T("Double-click an INF, Library, PCD, or Depex to find that item in its View"));
-		if (!m_ylogLibrary.GetCheck() && !m_ylogPcd.GetCheck() && !m_ylogDepex.GetCheck() && !m_ylogBuildFlags.GetCheck() && !m_ylogFixedAddress.GetCheck()) {
-			MessageBox(_T("Run build with \"-Y LIBRARY -Y -PCD -Y DEXPEX -Y BUILD_FLAGS -Y FIXED_ADDRESS -y filename.txt\" to generate full Module Summary data, or only the flags for the desired Module Summary data."), _T("WARNING - build -Y report file not specified"), MB_ICONWARNING);
+		if (!m_buildReportLibrary.GetCheck() && !m_buildReportPcd.GetCheck() && !m_buildReportDepex.GetCheck() && !m_buildReportBuildFlags.GetCheck() && !m_buildReportFixedAddress.GetCheck()) {
+			MessageBox(_T("Run build with \"-Y LIBRARY -Y -PCD -Y DEXPEX -Y BUILD_FLAGS -Y FIXED_ADDRESS -y filename.txt\" to generate full Module Summary data, or only the flags for the desired Module Summary data."), _T("WARNING - build report file not specified"), MB_ICONWARNING);
 			GetDlgItem(IDC_EDIT_LEFT_LIST)->SetWindowTextW(_T(""));
 		} else
 			GetDlgItem(IDC_EDIT_LEFT_LIST)->SetWindowTextW(m_fileModuleSummary);
@@ -120,8 +120,8 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedRadioFileData()
 	case e_RadioViewFdfLayout://tree
 		m_staticLeftList.SetWindowTextW(_T("FDF layout"));
 		m_staticRightList.SetWindowTextW(_T("Click a tree row to display FV modules; double-click a list row to view details of item"));
-		if (!m_ylogFlash.GetCheck()) {
-			MessageBox(_T("Run build with \"-Y FLASH -y filename.txt\" to generate FDF layout."), _T("WARNING - build -Y report file not specified"), MB_ICONWARNING);
+		if (!m_buildReportFlash.GetCheck()) {
+			MessageBox(_T("Run build with \"-Y FLASH -y filename.txt\" to generate FDF layout."), _T("WARNING - build report file not specified"), MB_ICONWARNING);
 			GetDlgItem(IDC_EDIT_LEFT_LIST)->SetWindowTextW(_T(""));
 		} else
 			GetDlgItem(IDC_EDIT_LEFT_LIST)->SetWindowTextW(m_fileFlash);
@@ -131,7 +131,7 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedRadioFileData()
 
 
 /*++
-  Function: OnBnClickedCheckYLog
+  Function: OnBnClickedCheckBuildReport
 
   Parameters: none
 
@@ -139,7 +139,7 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedRadioFileData()
 
   Returns: none
 --*/
-void CEDKIIBuildDataViewerDlg::OnBnClickedCheckYLog()
+void CEDKIIBuildDataViewerDlg::OnBnClickedCheckBuildReport()
 {
 	// Ignore all clicks; boxes will be checked when -y log file is parsed.
 	// I did not want to set the Disabled property because it grays it, which isn't as easy to read.
