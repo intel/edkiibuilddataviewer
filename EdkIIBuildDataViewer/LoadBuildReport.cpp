@@ -77,9 +77,8 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildReport()
 					fileStr.TrimLeft(); // trim leading whitespace after string was deleted
 					// ensure all backslashes are slashes
 					fileStr.Replace(_T('\\'), _T('/'));
-					tempStr = m_workspace + _T('/') + m_packageDSC;
-					if (fileStr.Compare(m_workspace + _T('/') + m_packageDSC) != 0) {
-						errorStr.Format(_T("DSC file paths in log files do not match\n\nLog file: %s\nReport file: %s"), fileStr, m_workspace + _T('/') + m_packageDSC);
+					if (fileStr.Compare(m_workspace + m_packageDSC) != 0) {
+						errorStr.Format(_T("DSC file paths in log files do not match\n\nLog file: %s\nReport file: %s"), fileStr, m_workspace + m_packageDSC);
 						MessageBox(errorStr, _T("ERROR"),  MB_ICONERROR);
 						break;
 					} else {
@@ -382,7 +381,7 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildReport()
 								fileStr.Replace(_T('\\'), _T('/'));
 								if (j == 0) {
 									j++; // index set to 1 to indicate LibraryName is expected
-									fileStr.Delete(0, 1 + m_workspace.GetLength());
+									fileStr.Delete(0, m_workspace.GetLength());
 									hItem2 = m_cvTreeModuleSummary.GetTreeCtrl().InsertItem(_T(""), hItem);
 									m_cvTreeModuleSummary.GetTreeCtrl().SetItemData(hItem2, e_ModuleSummaryLibrary);
 									m_cvTreeModuleSummary.SetItemText(hItem2, 1, fileStr);

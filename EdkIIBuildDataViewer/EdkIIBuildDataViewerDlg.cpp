@@ -721,7 +721,7 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedWriteSourceList()
 				fileStr.Delete(0, index + 1);
 				if (!bIncludeINF) continue;
 			}
-			tempStr = m_workspace + _T("/") + pathStr + fileStr + fileDelimiter;
+			tempStr = m_workspace + pathStr + fileStr + fileDelimiter;
 			csf.WriteString(tempStr);
 		}
 

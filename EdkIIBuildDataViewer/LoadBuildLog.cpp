@@ -146,6 +146,24 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 		// clear all checks because it is not known what sections are present in the report
 		InitBuildReportData();
 
+		// Workspace may end with / or \ (e.g. C:\), or it may not (e.g. C:\xyz) in build log.
+		// Force Workspace to end with / or \ (whichever is reverse first found with reverse find)
+		// so removing Workspace from file paths is 1 line of code based on string length.
+		// This also makes it easier to form file paths because we know workspace ends with / or \.
+		//
+		// Get last character from Workspace string e.g. C:\ or C:\xyz
+		TCHAR	tch = m_workspace.GetAt(m_workspace.GetLength() - 1);
+		if (tch != _T('/') && tch != _T('\\')) {
+			// If reverse find encounters /, then append / to workspace.
+			if (m_workspace.ReverseFind(_T('/')) != -1)
+				m_workspace += _T('/');
+			// Else append \ to workspace.
+			else
+				m_workspace += _T('\\');
+
+			UpdateData(FALSE);  // save m_workspace value
+		}
+
 		// search for .INF files
 		m_pwndProgress->SetText(_T("Finding .INF files used in build ..."));
 		m_pwndProgress->Show();
@@ -155,7 +173,7 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 // *** START: find .INF files in build log
 		// find .INF files used in build by looking for "Building ... <workspace>" followed by ".inf ["
 		// create strings to match
-		findStr1 = _T("Building ... ") + m_workspace + _T("\\");
+		findStr1 = _T("Building ... ") + m_workspace;
 		findStr2 = _T("inf [");
 		findStr3 = _T("GenFds ");
 		while (csf.ReadString(fileStr)) {
@@ -192,29 +210,46 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 				lvi.pszText = archStr.GetBuffer();
 				m_cvListInf.SetItem(&lvi);
 			} else if (!bBuildCfgFound && fileStr.Find(findStr3) != -1) {
-				BOOL	bfSwitch = FALSE;
-				BOOL	bpSwitch = FALSE;
+				BOOL	bfSwitch = FALSE;	// FDF file
+				BOOL	bpSwitch = FALSE;	// DSC file
+				BOOL	boSwitch = FALSE;	// output folder
+
 				// tokenize the string
 				curPos = 0;
   				resToken = fileStr.Tokenize(_T("\t "), curPos);
 				// is a token found?
 				while (resToken != _T("")) {
+					// if -o found, then next token will be output folder
+					if (!boSwitch && resToken.CompareNoCase(_T("-o")) == 0) {
+						m_buildOutputDir = fileStr.Tokenize(_T("\t "), curPos);
+						if (!m_buildOutputDir.IsEmpty()) {
+							boSwitch = TRUE;
+							// Extract output folder used in build from "GenFds -o <folder>".
+							m_buildOutputDir.Delete(0, m_workspace.GetLength());
+							// Replace backslash with slash so code that searches paths can expect one format to find.
+							m_buildOutputDir.Replace(_T('\\'), _T('/'));
+							// Remove "<TARGET>_<TOOL_CHAIN_TAG>" so it matches OUTPUT_DIRECTORY in DSC file.
+							m_buildOutputDir = m_buildOutputDir.Left(m_buildOutputDir.GetLength() - m_target.GetLength() - 1 - m_toolChain.GetLength());
+							GetDlgItem(IDC_STATIC_BUILD_OUTPUT_DIR)->SetWindowTextW(m_buildOutputDir);
+						}
 					// if -f found, then next token will be FDF filename
-					if (resToken.CompareNoCase(_T("-f")) == 0) {
+					} else if (!bfSwitch && resToken.CompareNoCase(_T("-f")) == 0) {
 						m_packageFDF = fileStr.Tokenize(_T("\t "), curPos);
 						if (!m_packageFDF.IsEmpty()) {
 							bfSwitch = TRUE;
-							m_packageFDF.Delete(0, m_workspace.GetLength() + 1);
+							// Extract FDF used in build from "GenFds -f <FDF file>".
+							m_packageFDF.Delete(0, m_workspace.GetLength());
 							// Replace backslash with slash so code that searches paths can expect one format to find.
 							m_packageFDF.Replace(_T('\\'), _T('/'));
 							GetDlgItem(IDC_STATIC_PACKAGE_FDF)->SetWindowTextW(m_packageFDF);
 						}
 					// if -p found, then next token will be DSC filename
-					} else if (resToken.CompareNoCase(_T("-p")) == 0) {
+					} else if (!bpSwitch && resToken.CompareNoCase(_T("-p")) == 0) {
 						m_packageDSC = fileStr.Tokenize(_T("\t "), curPos);
 						if (!m_packageDSC.IsEmpty()) {
 							bpSwitch = TRUE;
-							m_packageDSC.Delete(0, m_workspace.GetLength() + 1);
+							// Extract DSC used in build from "GenFds -p <DSC file>".
+							m_packageDSC.Delete(0, m_workspace.GetLength());
 							// Replace backslash with slash so code that searches paths can expect one format to find.
 							m_packageDSC.Replace(_T('\\'), _T('/'));
 							GetDlgItem(IDC_STATIC_PACKAGE_DSC)->SetWindowTextW(m_packageDSC);
@@ -222,7 +257,7 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 					}
 
 					// if both switches found, then break
-					if (bfSwitch && bpSwitch) {
+					if (bfSwitch && bpSwitch && boSwitch) {
 						// all build cfg items found, so set flag TRUE
 						bBuildCfgFound = TRUE;
 						break;
@@ -298,7 +333,7 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 			// track item count in list control with nCount
 			DWORD			infRow = nCount++;
 
-			tempStr = m_workspace + _T('/') + myInfBuild.InfFileName;
+			tempStr = m_workspace + myInfBuild.InfFileName;
 			if (csf2.Open(tempStr, CFile::modeRead | CFile::typeText)) {
 				tempStr.Format(_T("Parsing sections of .INF file %u ..."), i + 1);
 				m_pwndProgress->SetText(tempStr);
@@ -512,7 +547,7 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 */
 
 // *** START: find .INF files in .DSC file
-		fileStr = m_workspace + _T('/') + m_packageDSC;
+		fileStr = m_workspace + m_packageDSC;
 		// now find INF file in DSC file, and add the DSC line # to the list ctrl in column 2
 		if (csf.Open(fileStr, CFile::modeRead | CFile::typeText)) {
 			m_pwndProgress->SetText(_T("Finding .INF files in package DSC ..."));
@@ -579,44 +614,6 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 
 		// set first visible item to top of tree
 		m_cvTreeDec.GetTreeCtrl().SelectSetFirstVisible(m_cvTreeDec.GetTreeCtrl().GetRootItem());
-
-// *** START: find OUTPUT_DIRECTORY in .DSC file
-		fileStr = m_workspace + _T('/') + m_packageDSC;
-		// open package DSC to determine build OUTPUT_DIRECTORY so we can find build files
-		if (csf.Open(fileStr, CFile::modeRead | CFile::typeText)) {
-			// loop until OUTPUT_DIRECTORY is found
-			while (1) {
-				// if EOF then break
-				if (!csf.ReadString(fileStr)) break;
-
-				// tokenize the string
-				curPos = 0;
-  				resToken = fileStr.Tokenize(_T("="), curPos);
-				// is a token found?
-				if (resToken != _T("")) {
-					// does token match OUTPUT_DIRECTORY?
-					resToken.Trim(_T("\t "));
-					if (resToken.CompareNoCase(_T("OUTPUT_DIRECTORY")) == 0) {
-						// get token on right of =
-			 			resToken = fileStr.Tokenize(_T("="), curPos);
-						// is a token found?
-						if (resToken != _T("")) {
-							// remove whitespace on left and right of string
-							resToken.TrimLeft();
-							resToken.TrimRight();
-							// write string to control var
-							// ensure all backslashes are slashes
-							resToken.Replace(_T('\\'), _T('/'));
-							GetDlgItem(IDC_STATIC_BUILD_OUTPUT_DIR)->SetWindowTextW(resToken);
-							break;
-						}
-					}
-				}
-			}
-
-			csf.Close();
-		}
-// *** END: find OUTPUT_DIRECTORY in .DSC file
 
 		// update variables associated with control IDs due to SetWindowTextW() calls
 		UpdateData(TRUE);
@@ -696,7 +693,7 @@ int CEDKIIBuildDataViewerDlg::ParseDecFiles() {
 		m_pwndProgress->Show();
 
 		lineNum = 0;
-		if (csf.Open(m_workspace + _T('/') + m_DEC.GetAt(i).DecFileName, CFile::modeRead | CFile::typeText)) {
+		if (csf.Open(m_workspace + m_DEC.GetAt(i).DecFileName, CFile::modeRead | CFile::typeText)) {
 			while (1) {
 				lineNum++;
 				// if EOF then break
@@ -784,7 +781,7 @@ int CEDKIIBuildDataViewerDlg::ParseDecFiles() {
 						myDecLibClass.DecFileName = m_DEC.GetAt(i).DecFileName;
 						myDecLibClass.DecLineNum = lineNum;
 						myDecLibClass.LibName = tokenArray.GetAt(0);
-						myDecLibClass.ImplementFileName = m_workspace + _T('/') + m_DEC.GetAt(i).DecFileName;
+						myDecLibClass.ImplementFileName = m_workspace + m_DEC.GetAt(i).DecFileName;
 						myDecLibClass.ImplementFileName.Replace(_T('\\'), _T('/'));
 						// now remove DEC filename but keep the path, because the Library implementation is relative to the DEC path
 						myDecLibClass.ImplementFileName.Delete(myDecLibClass.ImplementFileName.ReverseFind(_T('/')) + 1, myDecLibClass.ImplementFileName.GetLength() + 1);
@@ -995,7 +992,7 @@ int CEDKIIBuildDataViewerDlg::ParseDecFiles() {
 					for (; itDec != itDecEnd; itDec++) {
 						if (itDec->DecFileName == myDecLibClass.DecFileName) {
 							tempStr = myDecLibClass.ImplementFileName;
-							tempStr.Delete(0, m_workspace.GetLength() + 1);
+							tempStr.Delete(0, m_workspace.GetLength());
 							m_cvListSource.SetItemText(i, 1, tempStr);
 							bFlag = TRUE;
 

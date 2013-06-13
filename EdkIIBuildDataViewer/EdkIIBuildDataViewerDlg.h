@@ -231,6 +231,7 @@ protected:
 	void				Search(BOOL bDirForward = TRUE);
 	int					ListCompareItem(CCustomListCtrl* pList, int index, int subItem, int subItem2);
 	int					TreeWndCompareItem(CColumnTreeWnd* pTreeWnd, HTREEITEM hti, int subItem);
+	CString				GetWorkspacePath();
 
 	void				CheckGuidsForDuplicates();
 	int					InsertGuidPool(EFI_GUID Guid, UINT8 GuidType, UINT32 *pIndex, CString filename, UINT32 lineNum);

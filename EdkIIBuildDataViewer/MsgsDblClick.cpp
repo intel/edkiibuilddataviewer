@@ -94,7 +94,7 @@ void CEDKIIBuildDataViewerDlg::OnNMDblclkLaunchEditor(NMHDR *pNMHDR, LRESULT *pR
 		// was item found defined in a file?
 		if (!tempStr.IsEmpty()) {
 			CString paramStr;
-			paramStr.Format(_T("%s/%s"), m_workspace, tempStr);
+			paramStr.Format(_T("%s%s"), m_workspace, tempStr);
 
 			// copy switches, and look for "LineNum" keyword to replace with a value
 //			MessageBox(_T("editorSwitches=") + m_editorSwitches, _T("DEBUG"));

@@ -39,8 +39,13 @@ line number where the data construct was found, and all data is searchable.
 ***************************************
 * Release Notes
 ***************************************
+o Revision 1.0.1.3
+  + Fix bug where paths are broken when Workspace is root of a drive e.g. C:\ instead of a folder e.g. C:\BIOS.  This will happen when you use
+    SUBST to assign a drive letter to a path on the hard drive.
+  + Change Build Output Directory detection to use "GenFds -o" log output instead of OUTPUT_DIRECTORY from DSC file.
+
 o Revision 1.0.1.2
-  + Add initial command line support.
+  + Add command line support.
   + Add command line error checks to output to console or message box.
   + Add AutoIt script (http://www.autoitscript.com/site/autoit) to read a build log and output the source list.
 
