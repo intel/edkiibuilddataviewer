@@ -34,7 +34,8 @@ if "%4"=="" goto error4.0
 if not exist %4 goto error4.1
 if "%5"=="" goto error5.0
 if not [%~x5] == [] goto error5.1
-if not "%6"=="" if not exist %6 goto error6.0
+if "%6"=="" goto error6.0
+if not "%6"=="" if not exist %6 goto error6.1
 
 set BIOS_PLATFORM=%1
 set BIOS_BASELINE=%2
@@ -133,6 +134,10 @@ echo ERROR: doxygen output dir not found, %5
 goto done
 
 :error6.0
+echo ERROR: BIOS source file list not specified
+goto done
+
+:error6.1
 echo ERROR: BIOS source file list not found, %6
 goto done
 
