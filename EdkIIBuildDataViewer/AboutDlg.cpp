@@ -41,6 +41,8 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_ACK6_LICENSE_LINK, m_ack6LicenseLink);
 	DDX_Control(pDX, IDC_ACK7_LINK, m_ack7Link);
 	DDX_Control(pDX, IDC_ACK7_LICENSE_LINK, m_ack7LicenseLink);
+	DDX_Control(pDX, IDC_ACK8_LINK, m_ack8Link);
+	DDX_Control(pDX, IDC_ACK8_LICENSE_LINK, m_ack8LicenseLink);
 }
 
 BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
@@ -78,8 +80,10 @@ BOOL CAboutDlg::OnInitDialog()
 	m_ack5LicenseLink.SetURL(_T("http://www.codeproject.com/info/EULA.aspx"));
 	m_ack6Link.SetURL(_T("http://www.codeproject.com/Articles/1940/XGetopt-A-Unix-compatible-getopt-for-MFC-and-Win32"));
 	m_ack6LicenseLink.SetURL(_T("http://www.codeproject.com/info/EULA.aspx"));
-	m_ack7Link.SetURL(_T("http://msdn.microsoft.com/en-us/library/windows/desktop/ms646985%28v=vs.85%29.aspx"));
-	m_ack7LicenseLink.SetURL(_T("http://msdn.microsoft.com/en-us/cc300389.aspx#D"));
+	m_ack7Link.SetURL(_T("http://www.codeproject.com/Articles/9865/XFolderDialog-a-folder-selection-dialog-based-on-C"));
+	m_ack7LicenseLink.SetURL(_T("http://www.codeproject.com/info/EULA.aspx"));
+	m_ack8Link.SetURL(_T("http://msdn.microsoft.com/en-us/library/windows/desktop/ms646985%28v=vs.85%29.aspx"));
+	m_ack8LicenseLink.SetURL(_T("http://msdn.microsoft.com/en-us/cc300389.aspx#D"));
 
 	return TRUE;  // return TRUE unless you set the focus to a control
 }

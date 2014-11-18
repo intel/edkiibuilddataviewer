@@ -116,6 +116,27 @@
     <ClInclude Include="X-controls\XGetopt.h">
       <Filter>X-controls\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="X-controls\XFileOpenListView.h">
+      <Filter>X-controls\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="X-controls\XFolderDialog.h">
+      <Filter>X-controls\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="X-controls\XFolderDialogRes.h">
+      <Filter>X-controls\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="X-controls\XHistoryCombo.h">
+      <Filter>X-controls\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="X-controls\XHyperLink.h">
+      <Filter>X-controls\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="X-controls\XWinVer.h">
+      <Filter>X-controls\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="X-controls\XTrace.h">
+      <Filter>X-controls\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EdkIIBuildDataViewer.cpp">
@@ -191,6 +212,21 @@
       <Filter>X-controls\Source Files</Filter>
     </ClCompile>
     <ClCompile Include="X-controls\argcargv.cpp">
+      <Filter>X-controls\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="X-controls\XFileOpenListView.cpp">
+      <Filter>X-controls\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="X-controls\XFolderDialog.cpp">
+      <Filter>X-controls\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="X-controls\XHistoryCombo.cpp">
+      <Filter>X-controls\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="X-controls\XHyperLink.cpp">
+      <Filter>X-controls\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="X-controls\XWinVer.cpp">
       <Filter>X-controls\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

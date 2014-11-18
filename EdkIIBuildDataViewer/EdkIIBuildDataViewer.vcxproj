@@ -126,11 +126,18 @@
     <ClInclude Include="X-controls\argcargv.h" />
     <ClInclude Include="X-controls\FontSize.h" />
     <ClInclude Include="X-controls\XColorStatic.h" />
+    <ClInclude Include="X-controls\XFileOpenListView.h" />
+    <ClInclude Include="X-controls\XFolderDialog.h" />
+    <ClInclude Include="X-controls\XFolderDialogRes.h" />
     <ClInclude Include="X-controls\XGetopt.h" />
     <ClInclude Include="X-controls\XGroupBox.h" />
+    <ClInclude Include="X-controls\XHistoryCombo.h" />
+    <ClInclude Include="X-controls\XHyperLink.h" />
     <ClInclude Include="X-controls\XIcon.h" />
     <ClInclude Include="X-controls\XProgressWnd.h" />
+    <ClInclude Include="X-controls\XTrace.h" />
     <ClInclude Include="X-controls\XVisualStyles.h" />
+    <ClInclude Include="X-controls\XWinVer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AboutDlg.cpp" />
@@ -157,10 +164,15 @@
     <ClCompile Include="X-controls\argcargv.cpp" />
     <ClCompile Include="X-controls\FontSize.cpp" />
     <ClCompile Include="X-controls\XColorStatic.cpp" />
+    <ClCompile Include="X-controls\XFileOpenListView.cpp" />
+    <ClCompile Include="X-controls\XFolderDialog.cpp" />
     <ClCompile Include="X-controls\XGetopt.cpp" />
     <ClCompile Include="X-controls\XGroupBox.cpp" />
+    <ClCompile Include="X-controls\XHistoryCombo.cpp" />
+    <ClCompile Include="X-controls\XHyperLink.cpp" />
     <ClCompile Include="X-controls\XIcon.cpp" />
     <ClCompile Include="X-controls\XProgressWnd.cpp" />
+    <ClCompile Include="X-controls\XWinVer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="EdkIIBuildDataViewer.rc" />

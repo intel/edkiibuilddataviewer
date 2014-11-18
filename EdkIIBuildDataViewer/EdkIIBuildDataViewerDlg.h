@@ -219,6 +219,7 @@ protected:
 	CString				m_editorExe;
 	CString				m_editorSwitches;
 	int					m_minsizeX, m_minsizeY;
+	UINT				m_LoadLogReturnValue;
 
 	// user defined functions
 	void				InitBuildData(BOOL bInitWinCtrl = TRUE);
@@ -232,6 +233,7 @@ protected:
 	int					ListCompareItem(CCustomListCtrl* pList, int index, int subItem, int subItem2);
 	int					TreeWndCompareItem(CColumnTreeWnd* pTreeWnd, HTREEITEM hti, int subItem);
 	CString				GetWorkspacePath();
+	void				KillProgressWnd();
 
 	void				CheckGuidsForDuplicates();
 	int					InsertGuidPool(EFI_GUID Guid, UINT8 GuidType, UINT32 *pIndex, CString filename, UINT32 lineNum);

@@ -14,6 +14,13 @@
 #include "stdafx.h"
 #include "EDKIIBuildDataViewer.h"
 #include "EDKIIBuildDataViewerDlg.h"
+// start: 3rd party code
+#include "XFolderDialog.h"
+// end: 3rd party code
+
+#define SELECT_BUILD_LOG_SUCCESS			0
+#define SELECT_BUILD_LOG_ERROR				1
+#define SELECT_BUILD_LOG_SUBST_FOLDER		2
 
 /*++
   Function: OnBnClickedSelectBuildLog
@@ -28,31 +35,38 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 {
 	CFileDialog		fd(TRUE, L"*.log", NULL, OFN_DONTADDTORECENT | OFN_ENABLESIZING, _T("Log files (*.log)|*.log|All files (*.*)|*.*||"));
 
+	m_LoadLogReturnValue = SELECT_BUILD_LOG_SUCCESS;
 	fd.m_ofn.lpstrTitle = _T("Select EDK II BIOS build log file");
 	if (fd.DoModal() == IDOK) {
 		CStdioFile		csf, csf2;
-		BOOL			bBuildCfgFound = FALSE;
+		BOOL			bBuildCfgFound;
 		CString			resToken, resToken2;
-		int				curPos, i, j, lineNum = 0;
-		CString			fileStr;
-		CString			tempStr, tempStr2;
+		int				curPos, i, j, lineNum;
+		CString			fileStr, filenameStr;
+		CString			tempStr, tempStr2, oldWorkspace;
 		LVITEM			lvi;
+
+		filenameStr = fd.GetPathName();
 
 		// init build data before reading from files
 		InitBuildData();
 
 // *** error check and return
-		if (!csf.Open(fd.GetPathName(), CFile::modeRead | CFile::typeText)) {
-			MessageBox(_T("Cannot open file!"), _T("ERROR"), MB_ICONERROR);
+		if (!csf.Open(filenameStr, CFile::modeRead | CFile::typeText)) {
+			tempStr.Format(_T("Can't open log file %s"), filenameStr);
+			MessageBox(tempStr, _T("ERROR"), MB_ICONERROR);
+			m_LoadLogReturnValue = SELECT_BUILD_LOG_ERROR;
 			return;
 		}
 
-		if (m_pwndProgress != NULL)
-			delete m_pwndProgress;
+		lineNum = 0;
+		bBuildCfgFound = FALSE;
+
+		KillProgressWnd();
 		m_pwndProgress = new CXProgressWnd(this, _T("Parsing build log file"), FALSE, FALSE);
 		m_pwndProgress->GoModal(this);
 
-		m_buildLog = fd.GetPathName();
+		m_buildLog = filenameStr;
 		// Replace backslash with slash so code that searches paths can expect one format to find.
 		m_buildLog.Replace(_T('\\'), _T('/'));
 		GetDlgItem(IDC_EDIT_BUILD_LOG)->SetWindowTextW(m_buildLog);
@@ -135,9 +149,9 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 // *** error check and return
 		// all build cfg items not found, so return
 		if (i != nExpectedBuildCfgCount) {
-			delete m_pwndProgress;
-			m_pwndProgress = NULL;
+			KillProgressWnd();
 			InitBuildData();
+			m_LoadLogReturnValue = SELECT_BUILD_LOG_ERROR;
 			return;
 		}
 
@@ -164,31 +178,65 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 			UpdateData(FALSE);  // save m_workspace value
 		}
 
+		if (m_LoadLogReturnValue != SELECT_BUILD_LOG_SUBST_FOLDER) {
+			// Check workspace folder exists.
+			if (!PathFileExists(m_workspace)) {
+				KillProgressWnd();
+				tempStr.Format(_T("Workspace folder %s doesn't exist.  Was it s SUBST drive?\nClick Yes to choose the real source folder."), m_workspace);
+				if (MessageBox(tempStr, _T("ERROR"), MB_YESNO) == IDYES) {
+					CXFolderDialog dlg(_T(""), CXFolderDialog::XFILEDIALOG_AUTO_DETECT_OS_VERSION);
+
+					dlg.SetTitle(_T("Select Folder"));
+					if (dlg.DoModal() == IDOK) {
+						oldWorkspace = m_workspace;
+			    		m_workspace = dlg.GetPath() + _T('/');
+						m_workspace.Replace(_T('\\'), _T('/'));
+						GetDlgItem(IDC_STATIC_WORKSPACE)->SetWindowTextW(m_workspace);
+						UpdateData(FALSE);  // save m_workspace value
+						filenameStr = m_workspace + fd.GetFileName();
+
+						m_LoadLogReturnValue = SELECT_BUILD_LOG_SUBST_FOLDER;
+
+						m_pwndProgress = new CXProgressWnd(this, _T("Parsing build log file"), FALSE, FALSE);
+						m_pwndProgress->GoModal(this);
+					}
+				} else {
+					m_LoadLogReturnValue = SELECT_BUILD_LOG_ERROR;
+					return;
+				}
+			}
+		}
+
 		// search for .INF files
 		m_pwndProgress->SetText(_T("Finding .INF files used in build ..."));
 		m_pwndProgress->Show();
 
-		CString	archStr, findStr1, findStr2, findStr3;
+		CString	archStr, findBuildingStr, findInfStr, findDscStr, findFdfStr;
+		BOOL	bFdfFound = FALSE;	// FDF file
+		BOOL	bDscFound = FALSE;	// DSC file
 
 // *** START: find .INF files in build log
 		// find .INF files used in build by looking for "Building ... <workspace>" followed by ".inf ["
 		// create strings to match
-		findStr1 = _T("Building ... ") + m_workspace;
-		findStr2 = _T("inf [");
-		findStr3 = _T("GenFds ");
+		if (m_LoadLogReturnValue == SELECT_BUILD_LOG_SUBST_FOLDER)
+			findBuildingStr = _T("Building ... ") + oldWorkspace;
+		else
+			findBuildingStr = _T("Building ... ") + m_workspace;
+		findInfStr = _T("inf [");
+		findDscStr = _T("Active Platform ");
+		findFdfStr = _T("Flash Image Definition ");
+
 		while (csf.ReadString(fileStr)) {
 			// find string to match, and ".inf [", which indicates .INF file
-			int findIndex1 = fileStr.Find(findStr1);
-			int findIndex2 = fileStr.Find(findStr2);
-//			if (findIndex1 == 0 && findIndex2 != -1) {
+			int findIndex1 = fileStr.Find(findBuildingStr);
+			int findIndex2 = fileStr.Find(findInfStr);
 			// "Building ... " should be at beginning of string (index 0)
 			// workaround for build log bug: check find index to not be -1, and then remove characters from index 0 to the find index
 			// 1. sometimes there is whitespace before it
 			// 2. sometimes a newline isn't output on the previous build command, which causes "Building ... " to be at end of that string
 			if (findIndex1 != -1 && findIndex2 != -1) {
 				// column 0 text: remove prefix string "Building ... " and workspace because it's redundant data
-//				fileStr.Delete(0, findStr1.GetLength());
-				fileStr.Delete(0, findIndex1 + findStr1.GetLength());
+				fileStr.Delete(0, findIndex1 + findBuildingStr.GetLength());
 				//  column 1 text: create string with "[arch]" data
 				archStr = fileStr;
 				archStr.Delete(0, fileStr.ReverseFind(_T('[')));
@@ -209,55 +257,50 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 				lvi.iSubItem = 1;
 				lvi.pszText = archStr.GetBuffer();
 				m_cvListInf.SetItem(&lvi);
-			} else if (!bBuildCfgFound && fileStr.Find(findStr3) != -1) {
-				BOOL	bfSwitch = FALSE;	// FDF file
-				BOOL	bpSwitch = FALSE;	// DSC file
-				BOOL	boSwitch = FALSE;	// output folder
+			} else if (!bBuildCfgFound) {
+				if (fileStr.Find(findDscStr) != 0 && fileStr.Find(findFdfStr) != 0)
+					continue;
+				BOOL	bDsc = FALSE;
+				BOOL	bFdf = FALSE;
+
+				if (fileStr.Find(findDscStr) == 0) bDsc = TRUE;
+				if (fileStr.Find(findFdfStr) == 0) bFdf = TRUE;
 
 				// tokenize the string
 				curPos = 0;
   				resToken = fileStr.Tokenize(_T("\t "), curPos);
 				// is a token found?
 				while (resToken != _T("")) {
-					// if -o found, then next token will be output folder
-					if (!boSwitch && resToken.CompareNoCase(_T("-o")) == 0) {
-						m_buildOutputDir = fileStr.Tokenize(_T("\t "), curPos);
-						if (!m_buildOutputDir.IsEmpty()) {
-							boSwitch = TRUE;
-							// Extract output folder used in build from "GenFds -o <folder>".
-							m_buildOutputDir.Delete(0, m_workspace.GetLength());
-							// Replace backslash with slash so code that searches paths can expect one format to find.
-							m_buildOutputDir.Replace(_T('\\'), _T('/'));
-							// Remove "<TARGET>_<TOOL_CHAIN_TAG>" so it matches OUTPUT_DIRECTORY in DSC file.
-							m_buildOutputDir = m_buildOutputDir.Left(m_buildOutputDir.GetLength() - m_target.GetLength() - 1 - m_toolChain.GetLength());
-							GetDlgItem(IDC_STATIC_BUILD_OUTPUT_DIR)->SetWindowTextW(m_buildOutputDir);
-						}
-					// if -f found, then next token will be FDF filename
-					} else if (!bfSwitch && resToken.CompareNoCase(_T("-f")) == 0) {
+					if (bFdf && resToken.CompareNoCase(_T("=")) == 0) {
+					// next token will be FDF filename
 						m_packageFDF = fileStr.Tokenize(_T("\t "), curPos);
 						if (!m_packageFDF.IsEmpty()) {
-							bfSwitch = TRUE;
+							if (m_LoadLogReturnValue == SELECT_BUILD_LOG_SUBST_FOLDER)
+								m_packageFDF.Replace(oldWorkspace, m_workspace);
 							// Extract FDF used in build from "GenFds -f <FDF file>".
 							m_packageFDF.Delete(0, m_workspace.GetLength());
 							// Replace backslash with slash so code that searches paths can expect one format to find.
 							m_packageFDF.Replace(_T('\\'), _T('/'));
 							GetDlgItem(IDC_STATIC_PACKAGE_FDF)->SetWindowTextW(m_packageFDF);
+							bFdfFound = TRUE;
 						}
-					// if -p found, then next token will be DSC filename
-					} else if (!bpSwitch && resToken.CompareNoCase(_T("-p")) == 0) {
+					} else if (bDsc && resToken.CompareNoCase(_T("=")) == 0) {
+					// next token will be DSC filename
 						m_packageDSC = fileStr.Tokenize(_T("\t "), curPos);
 						if (!m_packageDSC.IsEmpty()) {
-							bpSwitch = TRUE;
+							if (m_LoadLogReturnValue == SELECT_BUILD_LOG_SUBST_FOLDER)
+								m_packageDSC.Replace(oldWorkspace, m_workspace);
 							// Extract DSC used in build from "GenFds -p <DSC file>".
 							m_packageDSC.Delete(0, m_workspace.GetLength());
 							// Replace backslash with slash so code that searches paths can expect one format to find.
 							m_packageDSC.Replace(_T('\\'), _T('/'));
 							GetDlgItem(IDC_STATIC_PACKAGE_DSC)->SetWindowTextW(m_packageDSC);
+							bDscFound = TRUE;
 						}
 					}
 
 					// if both switches found, then break
-					if (bfSwitch && bpSwitch && boSwitch) {
+					if (bFdfFound && bDscFound) {
 						// all build cfg items found, so set flag TRUE
 						bBuildCfgFound = TRUE;
 						break;
@@ -274,6 +317,9 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 // *** error check and return
 		if (!bBuildCfgFound) {
 			InitBuildData();
+			KillProgressWnd();
+			MessageBox(_T("Log file contents not validated"), _T("ERROR"), MB_ICONERROR);
+			m_LoadLogReturnValue = SELECT_BUILD_LOG_ERROR;
 			return;
 		}
 	
@@ -645,9 +691,10 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 		lvi.pszText = _T("list to be used to display C files that reference selected GUID   <not implemented>");
 		m_cvListGuidModuleRef.InsertItem(&lvi);
 	
-		delete m_pwndProgress;
-		m_pwndProgress = NULL;
+		KillProgressWnd();
 	}
+
+	m_LoadLogReturnValue = SELECT_BUILD_LOG_SUCCESS;
 }
 
 

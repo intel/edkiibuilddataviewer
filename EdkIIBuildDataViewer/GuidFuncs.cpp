@@ -27,16 +27,14 @@ void CEDKIIBuildDataViewerDlg::CheckGuidsForDuplicates ()
   Returns: none
 --*/
 {
-	if (m_pwndProgress != NULL)
-		delete m_pwndProgress;
+	KillProgressWnd();
 	m_pwndProgress = new CXProgressWnd(this, _T("Checking GUIDs for duplicates"), FALSE, FALSE);
 	m_pwndProgress->GoModal(this);
 
 //	m_pwndProgress->SetText(_T("Detecting build configuration ..."));
 //	m_pwndProgress->Show();
 
-	delete m_pwndProgress;
-	m_pwndProgress = NULL;
+	KillProgressWnd();
 }
 
 int CEDKIIBuildDataViewerDlg::SearchGuidPool (EFI_GUID Guid)

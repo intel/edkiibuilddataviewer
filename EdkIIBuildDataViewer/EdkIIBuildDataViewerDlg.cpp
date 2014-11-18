@@ -24,6 +24,22 @@
 // see PreTranslateMessage() for hotkey definitions
 
 /*++
+  Function: KillProgressWnd
+
+  Parameters: none
+
+  Purpose: Kill CProgressWnd object and initialize pointer to NULL.
+
+  Returns: none
+--*/
+void CEDKIIBuildDataViewerDlg::KillProgressWnd() {
+	if (m_pwndProgress == NULL) return;
+
+	delete m_pwndProgress;
+	m_pwndProgress = NULL;
+}
+
+/*++
   Function: CEDKIIBuildDataViewerDlg constructor
 
   Parameters: ptr to parent CWnd
@@ -141,6 +157,7 @@ void CEDKIIBuildDataViewerDlg::InitBuildReportData() {
 --*/
 CEDKIIBuildDataViewerDlg::~CEDKIIBuildDataViewerDlg()
 {
+	KillProgressWnd();
 	InitBuildData(FALSE);
 	WriteSettingsToRegistry();
 }

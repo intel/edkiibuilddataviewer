@@ -126,8 +126,7 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildReport()
 					bValidated = TRUE;
 			}
 
-			if (m_pwndProgress != NULL)
-				delete m_pwndProgress;
+			KillProgressWnd();
 			m_pwndProgress = new CXProgressWnd(this, _T("Parsing build report file"), FALSE, FALSE);
 			m_pwndProgress->GoModal(this);
 
@@ -183,8 +182,7 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildReport()
 			// Header not found, so clean up and return.
 			if (!bHeaderFound) {
 				csf.Close();
-				delete m_pwndProgress;
-				m_pwndProgress = NULL;
+				KillProgressWnd();
 				return;
 			}
 
@@ -755,7 +753,6 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildReport()
 		// set first visible item to top of tree
 		m_cvTreeModuleSummary.GetTreeCtrl().SelectSetFirstVisible(m_cvTreeModuleSummary.GetTreeCtrl().GetRootItem());
 
-		delete m_pwndProgress;
-		m_pwndProgress = NULL;
+		KillProgressWnd();
 	}
 }
