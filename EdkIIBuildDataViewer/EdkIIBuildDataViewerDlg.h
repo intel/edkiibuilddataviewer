@@ -220,6 +220,7 @@ protected:
 	CString				m_editorSwitches;
 	int					m_minsizeX, m_minsizeY;
 	UINT				m_LoadLogReturnValue;
+	BOOL				m_bSubstDrive;
 
 	// user defined functions
 	void				InitBuildData(BOOL bInitWinCtrl = TRUE);

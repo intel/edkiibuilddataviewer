@@ -178,6 +178,7 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 			UpdateData(FALSE);  // save m_workspace value
 		}
 
+		m_bSubstDrive = FALSE;
 		if (m_LoadLogReturnValue != SELECT_BUILD_LOG_SUBST_FOLDER) {
 			// Check workspace folder exists.
 			if (!PathFileExists(m_workspace)) {
@@ -188,6 +189,7 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 
 					dlg.SetTitle(_T("Select Folder"));
 					if (dlg.DoModal() == IDOK) {
+						m_bSubstDrive = TRUE;
 						oldWorkspace = m_workspace;
 			    		m_workspace = dlg.GetPath() + _T('/');
 						m_workspace.Replace(_T('\\'), _T('/'));
@@ -199,6 +201,10 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 
 						m_pwndProgress = new CXProgressWnd(this, _T("Parsing build log file"), FALSE, FALSE);
 						m_pwndProgress->GoModal(this);
+					} else {
+						GetDlgItem(IDC_EDIT_BUILD_LOG)->SetWindowTextW(_T(""));
+						m_LoadLogReturnValue = SELECT_BUILD_LOG_ERROR;
+						return;
 					}
 				} else {
 					m_LoadLogReturnValue = SELECT_BUILD_LOG_ERROR;
