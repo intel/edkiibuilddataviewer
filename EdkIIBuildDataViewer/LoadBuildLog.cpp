@@ -90,27 +90,26 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 		m_pwndProgress->SetText(_T("Detecting build configuration ..."));
 		m_pwndProgress->Show();
 		i = 0;
+		BOOLEAN bFoundBuildEnv = FALSE;
+		BOOLEAN bFoundStartTime = FALSE;
+
 		while (i < nExpectedBuildCfgCount) {
 			// if EOF then break
 			if (!csf.ReadString(fileStr))
 				break;
-
 			lineNum++;
 
-			if (lineNum == 1) {
-				if (fileStr.Find(_T("Build environment:")) == 0)
-					continue;
-				else {
-					MessageBox(_T("Invalid log file!"), _T("ERROR"),  MB_ICONERROR);
-					break;
+			if (!bFoundBuildEnv) {
+				if (fileStr.Find(_T("Build environment:")) == 0) {
+					bFoundBuildEnv = TRUE;
 				}
-			} else if (lineNum == 2) {
-				if (fileStr.Find(_T("Build start time:")) == 0)
-					continue;
-				else {
-					MessageBox(_T("Invalid log file!"), _T("ERROR"),  MB_ICONERROR);
-					break;
+				continue;
+			}
+			else if (!bFoundStartTime) {
+				if (fileStr.Find(_T("Build start time:")) == 0) {
+					bFoundStartTime = TRUE;
 				}
+				continue;
 			}
 
 			// tokenize the string
@@ -150,6 +149,7 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 		// all build cfg items not found, so return
 		if (i != nExpectedBuildCfgCount) {
 			KillProgressWnd();
+			MessageBox(_T("Invalid log file!"), _T("ERROR"), MB_ICONERROR);
 			InitBuildData();
 			m_LoadLogReturnValue = SELECT_BUILD_LOG_ERROR;
 			return;
