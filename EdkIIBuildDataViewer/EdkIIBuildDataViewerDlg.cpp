@@ -720,7 +720,7 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedWriteSourceList()
 
 		if (MessageBox(_T("Use doxygen list format?"), _T("Select list format"), MB_YESNO) == IDYES) {
 			csf.WriteString(_T("INPUT = "));
-			fileDelimiter = _T(" ");
+			fileDelimiter = _T(" \\\n");
 		} else {
 			fileDelimiter = _T("\n");
 		}

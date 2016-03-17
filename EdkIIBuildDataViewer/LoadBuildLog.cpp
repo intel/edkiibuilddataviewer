@@ -557,9 +557,16 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 									tempStr2.Delete(tempStr2.Find(_T('|')), tempStr2.GetLength());
 
 								fileStr.Delete(fileStr.Find(_T('|')), fileStr.GetLength());
-								fileStr.TrimRight();
 							}
-							tempStr = _T("     " ) + fileStr;
+
+              // remove comments from end of line
+              if (fileStr.Find(_T('#')) != -1)
+                fileStr.Delete(fileStr.Find(_T('#')), fileStr.GetLength());
+
+              // now trim whitespace on right
+  						fileStr.TrimRight();
+
+              tempStr = _T("     " ) + fileStr;
 							lvi.iItem = m_cvListSource.GetItemCount();
 							lvi.iSubItem = 0;
 							lvi.mask =  LVIF_TEXT | LVIF_PARAM;
