@@ -62,7 +62,7 @@ TCHAR *GetVersionInfo(TCHAR *InfoItem)
             // --19----        = LANG_RUSSIA
             // ----04b0 = 1200 = Codepage for Windows:Multilingual
 			_tcscpy_s(szResult, 256, _T("041904b0"));
-        }
+    }
 
 		// Add a codepage to base_file_info_sctructure
 		_stprintf_s (szGetName, _T("\\StringFileInfo\\%s\\"), szResult);

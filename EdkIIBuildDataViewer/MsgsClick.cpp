@@ -72,28 +72,49 @@ void CEDKIIBuildDataViewerDlg::OnNMRClickListPcdDef(NMHDR *pNMHDR, LRESULT *pRes
 --*/
 void CEDKIIBuildDataViewerDlg::OnNMClickListGuidVar(NMHDR *pNMHDR, LRESULT *pResult)
 {
-	LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
-	CString t = m_cvListGuidVar.GetItemText(pNMItemActivate->iItem, 0);
+  LPNMITEMACTIVATE pNMItemActivate = reinterpret_cast<LPNMITEMACTIVATE>(pNMHDR);
 
-	HGLOBAL hglbCopy;	
-	// Open the clipboard, and empty it. 
-	if (OpenClipboard()) {
-		EmptyClipboard(); 
+  *pResult = 0;
 
-		// Allocate a global memory object for the text.
-		hglbCopy = GlobalAlloc(GMEM_MOVEABLE, t.GetLength() * sizeof(TCHAR));
-		if (hglbCopy != NULL)
-		{
-			// Lock the handle and copy the text to the buffer. 
-			memcpy(GlobalLock(hglbCopy), t.GetBuffer(1024), t.GetLength() * sizeof(TCHAR)); 
-			GlobalUnlock(hglbCopy); 
-			// Place the handle on the clipboard. 
-			SetClipboardData(CF_TEXT, hglbCopy);
-		} else
-			CloseClipboard();
-	}
+  if (!OpenClipboard()) return;
 
-	*pResult = 0;
+  EmptyClipboard();
+
+  CString t = m_cvListGuidVar.GetItemText(pNMItemActivate->iItem, 0);
+  size_t  bufSize = (t.GetLength() + 1) * sizeof(TCHAR);
+
+  HGLOBAL hData = GlobalAlloc(GMEM_MOVEABLE, bufSize);
+  if (hData == NULL) return;
+
+  // Lock the handle and copy the text to the buffer.
+  memcpy_s(GlobalLock(hData), bufSize, t.LockBuffer(), bufSize);
+  t.UnlockBuffer();
+
+  GlobalUnlock(hData);
+  // Place the handle on the clipboard.
+  try {
+    UINT uiFormat = (sizeof(TCHAR) == sizeof(WCHAR)) ? CF_UNICODETEXT : CF_TEXT;
+    SetClipboardData(uiFormat, hData);
+
+    LPVOID lpMsgBuf;
+    DWORD dw = GetLastError(); 
+
+    FormatMessage(
+        FORMAT_MESSAGE_ALLOCATE_BUFFER | 
+        FORMAT_MESSAGE_FROM_SYSTEM |
+        FORMAT_MESSAGE_IGNORE_INSERTS,
+        NULL,
+        dw,
+        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
+        (LPTSTR) &lpMsgBuf,
+        0, NULL );
+    int bp = 0; // for setting breakpoint in try block after FormatMessage()
+  } catch (...) {
+    std::exception_ptr p;     // default initialization is to nullptr
+    p = std::current_exception();
+  }
+
+  CloseClipboard();
 }
 
 
