@@ -39,6 +39,10 @@ line number where the data construct was found, and all data is searchable.
 ***************************************
 * Release Notes
 ***************************************
+o Revision 1.0.2.5
+  + Converted project to Visual Studio 2015.
+  + Added tool home page to About dialog box.
+
 o Revision 1.0.1.3
   + Fix bug where paths are broken when Workspace is root of a drive e.g. C:\ instead of a folder e.g. C:\BIOS.  This will happen when you use
     SUBST to assign a drive letter to a path on the hard drive.

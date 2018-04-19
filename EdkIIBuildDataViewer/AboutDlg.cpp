@@ -26,6 +26,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC_COPYRIGHT, m_copyright);
 	DDX_Control(pDX, IDC_STATIC_APP_NAME, m_appName);
 	DDX_Control(pDX, IDC_STATIC_ACK, m_acknowledgements);
+	DDX_Control(pDX, IDC_TOOL_HOME_PAGE_LINK, m_ToolHomePageLink);
 	DDX_Control(pDX, IDC_BSD_LICENSE_LINK, m_BsdLicenseLink);
 	DDX_Control(pDX, IDC_ACK1_LINK, m_ack1Link);
 	DDX_Control(pDX, IDC_ACK1_LICENSE_LINK, m_ack1LicenseLink);
@@ -67,7 +68,8 @@ BOOL CAboutDlg::OnInitDialog()
 	m_acknowledgements.SetBold(TRUE, FALSE);
 	m_acknowledgements.SetFont(_T("Arial"), 16, FALSE);	// set font last, or it won't be used because font is recreated each SetXXX() call
 
-	m_BsdLicenseLink.SetURL(_T("http://opensource.org/licenses/bsd-license.php"));
+  m_ToolHomePageLink.SetURL(_T("https://github.com/01org/edkiibuilddataviewer/"));
+  m_BsdLicenseLink.SetURL(_T("http://opensource.org/licenses/bsd-license.php"));
 	m_ack1Link.SetURL(_T("http://www.mimec.org/components/mfc"));
 	m_ack1LicenseLink.SetURL(_T("http://doc.mimec.org/articles/mfc/mctree/index.html"));
 	m_ack2Link.SetURL(_T("http://www.codeproject.com/Articles/1657/EasySize-Dialog-resizing-in-no-time"));

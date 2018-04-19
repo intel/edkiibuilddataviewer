@@ -171,7 +171,7 @@ BOOL CEDKIIBuildDataViewerApp::ProcessCommandLine(int argc, TCHAR *argv[])
 				// output help to console
 				{
 					if (!errorStr.IsEmpty())
-						wprintf(_T("%s"), errorStr);
+						wprintf(_T("%s"), errorStr.GetBuffer());
 					wprintf(_T("Usage: %s -l buildLog [-s] sourceFileList [-d] [-i]\n"), m_pszExeName);
 					wprintf(_T("-l buildLog        filename for BIOS build log to open\n"));
 					wprintf(_T("-s sourceFileList  filename for source list file to create\n"));

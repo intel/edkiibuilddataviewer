@@ -40,6 +40,7 @@ public:
 	CStatic			m_appName;
 	CXColorStatic	m_acknowledgements;
 
+	CMFCLinkCtrl	m_ToolHomePageLink;
 	CMFCLinkCtrl	m_BsdLicenseLink;
 	CMFCLinkCtrl	m_ack1Link;
 	CMFCLinkCtrl	m_ack1LicenseLink;
