@@ -4,7 +4,7 @@ cls
 setlocal
 
 REM doxygen cfg file should reference this environment variables with $(name)
-set FILE_PATTERNS=*.c *.h *.asm *.asm16 *.inc *.S
+set FILE_PATTERNS=*.c *.h *.asm *.asm16 *.inc *.S *.nasm
 
 :ParseArgs
 if /I "%1"=="-h" goto Usage
@@ -83,7 +83,10 @@ if not exist %DOXYGEN_CFG% goto error_doxygen_cfg
 
 :step1
 REM generate BIOS doxygen files
-choice /t 3 /d y /m "Confirm: regenerate doxygen output for %1"
+set CHOICE_SECONDS=5
+set CHOICE_YN_DEFAULT=Y
+echo Default choice of %CHOICE_YN_DEFAULT% in %CHOICE_SECONDS% seconds ...
+choice /t %CHOICE_SECONDS% /d %CHOICE_YN_DEFAULT% /m "Confirm: regenerate doxygen output for %1"
 if %ERRORLEVEL% EQU 2 goto step2
 
 echo.

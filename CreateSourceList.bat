@@ -1,6 +1,5 @@
 @echo off
 REM Batch file to create EDK II BIOS source list from build log.
-cls
 setlocal
 
 :ParseArgs

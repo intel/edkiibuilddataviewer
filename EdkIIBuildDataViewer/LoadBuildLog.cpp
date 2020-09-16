@@ -92,6 +92,7 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 		i = 0;
 		BOOLEAN bFoundBuildEnv = FALSE;
 		BOOLEAN bFoundStartTime = FALSE;
+    int logOffset = -1;
 
 		while (i < nExpectedBuildCfgCount) {
 			// if EOF then break
@@ -99,7 +100,14 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 				break;
 			lineNum++;
 
-			if (!bFoundBuildEnv) {
+      // Find string index to our data.  Log file may have other text before the strings, e.g. a timestamp.
+      if (logOffset == -1)
+        logOffset = fileStr.Find(_T("Build environment:"));
+      // If the log offset has been determined, then remove the text.
+      if (logOffset >= 0)
+        fileStr = fileStr.Mid(logOffset);
+
+      if (!bFoundBuildEnv) {
 				if (fileStr.Find(_T("Build environment:")) == 0) {
 					bFoundBuildEnv = TRUE;
 				}
@@ -233,6 +241,8 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 		findFdfStr = _T("Flash Image Definition ");
 
 		while (csf.ReadString(fileStr)) {
+      // If the log offset has been determined, then remove the text.
+      fileStr = fileStr.Mid(logOffset);
 			// find string to match, and ".inf [", which indicates .INF file
 			int findIndex1 = fileStr.Find(findBuildingStr);
 			int findIndex2 = fileStr.Find(findInfStr);
@@ -274,7 +284,7 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 
 				// tokenize the string
 				curPos = 0;
-  				resToken = fileStr.Tokenize(_T("\t "), curPos);
+        resToken = fileStr.Tokenize(_T("\t "), curPos);
 				// is a token found?
 				while (resToken != _T("")) {
 					if (bFdf && resToken.CompareNoCase(_T("=")) == 0) {
@@ -306,7 +316,8 @@ void CEDKIIBuildDataViewerDlg::OnBnClickedSelectBuildLog()
 					}
 
 					// if both switches found, then break
-					if (bFdfFound && bDscFound) {
+//					if (bFdfFound && bDscFound) {
+					if (bDscFound) {
 						// all build cfg items found, so set flag TRUE
 						bBuildCfgFound = TRUE;
 						break;
