@@ -39,6 +39,12 @@ line number where the data construct was found, and all data is searchable.
 ***************************************
 * Release Notes
 ***************************************
+o Revision 1.0.3.0
+  + Fixes a build log parse issue due to EDK II BaseTools changes.
+  + Add detection of where the log data starts to strip a timestamp or other data before the desired data.
+  + Update doxygen batch files to be more robust (e.g. check requirements first).
+  + Update doxygen configuration file due to doxygen tool update.
+
 o Revision 1.0.2.5
   + Converted project to Visual Studio 2015.
   + Added tool home page to About dialog box.
